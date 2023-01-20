@@ -22,8 +22,9 @@ knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
 # Introduction
 
 `r self` implements a simple R client for interacting with the **CollaboratorDB** API.
-**CollaboratorDB** provides an ExperimentHub-like data store for Bioconductor objects based on the [schemas here](https://github.com/ArtifactDB/CollaboratorDB-schemas).
-Its purpose is to demonstrate how the ArtifactDB framework can be easily adapted for other applications.
+**CollaboratorDB** provides a publicly accessible store for Bioconductor objects based on the [schemas here](https://github.com/ArtifactDB/CollaboratorDB-schemas),
+and is intended to enable a smooth exchange of data and results between gRED scientists and their external collaborators.
+Functionality is provided to read objects from the backend, to save objects in new projects, and to save new versions of existing projects.
 
 # Fetching objects from the backend
 
@@ -36,7 +37,7 @@ obj <- fetchObject(id)
 obj
 ```
 
-We can extract the ExperimentHub-like metadata using `objectAnnotation()`:
+We can extract the metadata using the `objectAnnotation()` function:
 
 ```{r}
 str(objectAnnotation(obj))
@@ -45,28 +46,14 @@ str(objectAnnotation(obj))
 More complex objects can be loaded if the corresponding [**alabaster**](https://github.com/ArtifactDB/alabaster.base) packages are installed.
 For example, we can load [`SingleCellExperiment`](https://bioconductor.org/packages/SingleCellExperiment) objects if `r Githubpkg("ArtifactDB/alabaster.sce")` is installed.
 
-```r
-fetchObject("test:my_first_sce@v1")
+```{r}
+fetchObject("dssc-test_basic-2023:my_first_sce@2023-01-19")
 ```
 
-```
-## class: SingleCellExperiment
-## dim: 20006 3005
-## metadata(1): .internal
-## assays(1): counts
-## rownames(20006): Tspan12 Tshz1 ... mt-Rnr1 mt-Nd4l
-## rowData names(1): featureType
-## colnames(3005): 1772071015_C02 1772071017_G12 ... 1772066098_A12
-##   1772058148_F03
-## colData names(10): tissue group # ... level1class level2class
-## reducedDimNames(0):
-## mainExpName: endogenous
-## altExpNames(2): ERCC repeat
-```
+# Saving objects 
 
-# Saving objects to the backend
-
-Given some Bioconductor objects, we can annotate them with ExperimentHub-like metadata:
+Given some Bioconductor objects, we can annotate them with relevant metadata.
+Most of these should be self-explanatory; the most novel field is `terms`, consisting of (optional) terms from some supported ontologies that enable easier programmatic annotation.
 
 ```{r}
 library(S4Vectors)
@@ -74,14 +61,15 @@ df1 <- DataFrame(A=runif(10), B=rnorm(10), row.names=LETTERS[1:10])
 df1 <- annotateObject(df1, 
     title="FOO",
     description="Ich bien ein data frame",
-    maintainers="Aaron Lun <infinite.monkeys.with.keyboards@gmail.com>",
+    authors="Aaron Lun <infinite.monkeys.with.keyboards@gmail.com>",
     species=9606,
     genome=list(list(id="hg38", source="UCSC")),
-    origin=list(list(source="PubMed", id="123456789"))
+    origin=list(list(source="PubMed", id="123456789")),
+    terms=list(list(id="EFO:0008896", source="Experimental Factor Ontology", version="v3.39.1"))
 )
 ```
 
-Then we save them into a "staging directory":
+Then we save the object into a "staging directory":
 
 ```{r}
 staging <- tempfile()
@@ -98,7 +86,7 @@ df2 <- DataFrame(A=runif(10), B=rnorm(10), row.names=LETTERS[1:10])
 df2 <- annotateObject(df1, 
     title="BAR",
     description="Je suis une data frame",
-    maintainers=list(list(name="Darth Vader", email="vader@empire.gov")),
+    authors=list(list(name="Darth Vader", email="vader@empire.gov", orcid="0000-0000-0000-0001")),
     species=10090,
     genome=list(list(id="GRCm38", source="Ensembl")),
     origin=list(list(source="GEO", id="GSE123456"))
@@ -114,17 +102,21 @@ We pick a project name and version and call the `uploadDirectory()` function.
 This will prompt us for a [GitHub personal access token](https://github.com/settings/tokens) to authenticate into the backend, if we haven't supplied one already.
 
 🚨🚨🚨 **ALERT!**
-For cost and security reasons, the demonstrator instance only allows a certain set of GitHub users to perform new uploads.
-If you're not on the [list](https://github.com/ArtifactDB/CollaboratorDB-worker/master/tree/wrangler.toml), you'll have to ask someone to create a stub project for you before you can use `uploadDirectory()`.
+For cost and security reasons, the **CollaboratorDB** instance only allows GitHub users from the [CollaboratorDB](https://github.com/CollaboratorDB) organization to perform new uploads.
+Ask Aaron to add your GitHub account to this organization if you want to perform uploads.
 🚨🚨🚨
 
 ```{r, eval=FALSE}
 # Setting an expiry date of 1 day in the future, to avoid having lots of
 # testing projects lying around in the data store.
-uploadDirectory(staging, 
-    project="test-vignette", 
-    version=as.character(Sys.Date()), # using the date as the version.
-    expires=1)
+uploadDirectory(staging, project="test-vignette", expires=1)
+```
+
+By default, the current date is used as the version string, but users can specify another versioning scheme if appropriate.
+The same `uploadDirectory()` call can be used to update an existing project by simply specifying another version:
+
+```{r, eval=FALSE}
+uploadDirectory(staging, project="test-vignette", version="v2", expires=1)
 ```
 
 # `DelayedArray` wrappers for CollaboratorDB
@@ -132,43 +124,17 @@ uploadDirectory(staging,
 For arrays, `r self` offers some special behavior during loading:
 
 ```{r}
-mat <- fetchObject("test:my_first_sce/assay-1/matrix.h5@v1")
+mat <- fetchObject("dssc-test_basic-2023:my_first_sce/assay-1/matrix.h5@2023-01-19")
 mat
 ```
 
-The `CalciteArray` object is a [`DelayedArray`](https://bioconductor.org/packages/DelayedArray) subclass that remembers its ArtifactDB identifier.
-This provides some optimization opportunities during the save/upload of the unmodified array.
-For example, let's wrap `mat` inside an annotated list and save it:
+The `CollaboratorDBArray` object is a [`DelayedArray`](https://bioconductor.org/packages/DelayedArray) subclass that remembers its ArtifactDB identifier.
+This provides some optimization opportunities during the save/upload of the unmodified array,
+and allows for cheap project updates, e.g., when editing the metadata or annotations of a `SummarizedExperiment` without touching the assay data.
 
-```{r}
-obj <- List(thingy=mat)
-obj <- annotateObject(obj,
-    title="FOO",
-    description="I am a list",
-    maintainers="Aaron Lun <infinite.monkeys.with.keyboards@gmail.com>",
-    species=9606,
-    genome=list(list(id="hg38", source="UCSC")),
-    origin=list(list(source="PubMed", id="123456789"))
-)
-
-dir <- tempfile()
-dir.create(dir)
-saveObject(obj, dir, "bar")
-```
-
-If we were inclined to dig around in the `bar` directory, we would see that the `array` data in `child-1` doesn't actually contain any data, but just a link to the existing ArtifactDB identifier.
-This instructs `uploadDirectory()` to also skip the upload and create a link on the backend.
-
-```{r}
-zircon::extractLinkedID(dir, "bar/child-1/array")
-```
-
-In this manner, we can save compute time, upload bandwidth and storage space when creating new versions of an object.
-The biggest beneficiary of this functionality is the `SummarizedExperiment`, where we can update metadata, row/column annotations, etc. at low cost provided that the underlying assay data does not change.
-
-By default, the `CalciteArray` is created with file-backed arrays from the `r Biocpkg("HDF5Array")` package.
-This ensures that it can be easily manipulated in an R session with a small memory footprint.
-However, for analysis steps that actually use the array contents, it is best to convert the `CalciteArray` into an in-memory representation to avoid repeated disk queries:
+The `CollaboratorDBArray` is created with file-backed arrays from the `r Biocpkg("HDF5Array")` package.
+This ensures that it can be easily manipulated in an R session while maintaining a small memory footprint.
+However, for analysis steps that actually use the array contents, it is best to convert the `CollaboratorDBArray` into an in-memory representation to avoid repeated disk queries:
 
 ```{r}
 smat <- as(mat, "dgCMatrix")
@@ -193,13 +159,13 @@ str(meta$data_frame)
 We can inspect the permissions for a project:
 
 ```{r}
-getPermissions("test", url=restURL())
+getPermissions("dssc-test_basic-2023", url=restURL())
 ```
 
 And we can pull down all metadata for a particular version of a project:
 
 ```{r}
-v1.meta <- getProjectMetadata("test", version="v1", url=restURL())
+v1.meta <- getProjectMetadata("dssc-test_tenx-2023", version="2023-01-19", url=restURL())
 length(v1.meta)
 ```
 
