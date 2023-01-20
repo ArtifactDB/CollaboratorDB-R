@@ -1,0 +1,4 @@
+*.swp
+*.rds
+*.html
+tests/testthat/setup-private.R

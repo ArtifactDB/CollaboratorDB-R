@@ -1,0 +1,30 @@
+Package: CollaboratorDB
+Version: 0.98.0
+Date: 2023-01-19
+Title: Interface for CollaboratorDB 
+Description: 
+    Interface to read Bioconductor objects from (and write them to) the CollaboratorDB API.
+    Serialization of Bioconductor objects to/from file is implemented using the alabaster framework.
+    For uploading and private resources, authentication is based on GitHub user identities. 
+Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
+License: MIT + file LICENSE
+Imports:
+    CollaboratorDB.schemas,
+    alabaster.base,
+    zircon,
+    filelock,
+    utils,
+    methods,
+    BiocFileCache,
+    tools,
+    stats,
+    S4Vectors,
+    DelayedArray
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat,
+    BiocStyle,
+    BiocManager
+RoxygenNote: 7.2.3
+VignetteBuilder: knitr
