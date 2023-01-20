@@ -7,7 +7,7 @@
 uploadDirectory(
   dir,
   project,
-  version,
+  version = as.character(Sys.Date()),
   owners = NULL,
   viewers = NULL,
   public = TRUE,
@@ -20,7 +20,8 @@ uploadDirectory(
 
 \item{project}{String containing the name of the project.}
 
-\item{version}{String containing the version of the project.}
+\item{version}{String containing the version of the project.
+Defaults to the current date.}
 
 \item{owners}{Character vector of GitHub user names of project owners.
 Defaults to the currently authenticated user from \code{\link{setAccessToken}}.}

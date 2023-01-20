@@ -16,6 +16,12 @@ test_that("saveObject works as expected", {
     meta <- alabaster.base::acquireMetadata(tmp, "foo")
     roundtrip <- CollaboratorDB:::cdbLoadObject(meta, tmp)
 
+    expect_identical(objectAnnotation(roundtrip)$authors[[1]]$name, "Aaron Lun")
+    expect_match(objectAnnotation(roundtrip)$authors[[1]]$email, ".com")
+
+    # Fixing the metadata before comparison.
+    metadata(df)$.internal$CollaboratorDB$authors <- objectAnnotation(roundtrip)$authors
+    metadata(df)$.internal$CollaboratorDB$species <- as.list(metadata(df)$.internal$CollaboratorDB$species)
     expect_equal(df, roundtrip)
 })
 

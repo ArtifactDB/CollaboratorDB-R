@@ -1,37 +1,37 @@
-# Check that the CalciteArray works as expected.
-# library(testthat); library(CollaboratorDB); source("test-CalciteArray.R")
+# Check that the CollaboratorDBArray works as expected.
+# library(testthat); library(CollaboratorDB); source("test-CollaboratorDBArray.R")
 
 fun <- CollaboratorDB:::.configure_cache()
 
 library(DelayedArray)
-test_that("CalciteArraySeed constructors works as expected", {
-    id <- "test:my_first_sce/assay-1/matrix.h5@v1"
-    mat <- CalciteArray(id)
-    expect_s4_class(mat, "CalciteArray")
-    expect_s4_class(mat, "CalciteMatrix")
+test_that("CollaboratorDBArraySeed constructors works as expected", {
+    id <- "dssc-test_basic-2023:my_first_sce/assay-1/matrix.h5@2023-01-19"
+    mat <- CollaboratorDBArray(id)
+    expect_s4_class(mat, "CollaboratorDBArray")
+    expect_s4_class(mat, "CollaboratorDBMatrix")
     expect_identical(seed(mat)@id, id)
 
     # Works with the seed in the constructor.
-    mat2 <- CalciteArray(seed(mat))
+    mat2 <- CollaboratorDBArray(seed(mat))
     expect_identical(mat2, mat)
 
     # Resolves latest aliases.
-#    lid <- "test:my_first_sce/assay-1/matrix.h5@latest"
-#    lmat <- CalciteArray(lid)
-#    expect_s4_class(lmat, "CalciteArray")
+#    lid <- "dssc-test_basic-2023:my_first_sce/assay-1/matrix.h5@latest"
+#    lmat <- CollaboratorDBArray(lid)
+#    expect_s4_class(lmat, "CollaboratorDBArray")
 #    expect_identical(seed(lmat)@id, id)
 })
 
 library(DelayedArray)
-test_that("CalciteArraySeed savers works as expected", {
-    id <- "test:my_first_sce/assay-1/matrix.h5@v1"
-    mat <- CalciteArray(id)
+test_that("CollaboratorDBArraySeed savers works as expected", {
+    id <- "dssc-test_basic-2023:my_first_sce/assay-1/matrix.h5@2023-01-19"
+    mat <- CollaboratorDBArray(id)
 
     obj <- List(thingy=mat)
     obj <- annotateObject(obj,
         title="FOO",
         description="I am a list",
-        maintainers="Aaron Lun <infinite.monkeys.with.keyboards@gmail.com>",
+        authors="Aaron Lun <infinite.monkeys.with.keyboards@gmail.com>",
         species=9606,
         genome=list(list(id="hg38", source="UCSC")),
         origin=list(list(source="PubMed", id="123456789"))
@@ -50,9 +50,9 @@ test_that("CalciteArraySeed savers works as expected", {
 
 library(DelayedArray)
 test_that("fetchObject redirects to the CollaboratorDB loaders", {
-    id <- "test:my_first_sce/assay-1/matrix.h5@v1"
+    id <- "dssc-test_basic-2023:my_first_sce/assay-1/matrix.h5@2023-01-19"
     obj <- fetchObject(id)
-    expect_s4_class(obj, "CalciteArray")
+    expect_s4_class(obj, "CollaboratorDBArray")
 })
 
 fun()

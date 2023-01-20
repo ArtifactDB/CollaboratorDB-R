@@ -43,8 +43,16 @@ saveObject <- function(x, dir, path) {
     extras <- objectAnnotation(x)
     extras <- extras[setdiff(names(extras), "_extra")]
     meta <- c(meta, extras)
-    meta$authors <- I(meta$authors)
     meta$species <- I(meta$species)
+
+    authors <- as.list(meta$authors)
+    for (m in seq_along(authors)) {
+        if (is.character(authors[[m]])) {
+            frag <- as.person(authors[[m]])
+            authors[[m]] <- list(name = paste(frag$given, frag$family), email = frag$email)
+        }
+    }
+    meta$authors <- authors
 
     resource <- .writeMetadata(meta, dir)
     .writeMetadata(.createRedirection(dir, path, meta$path), dir)

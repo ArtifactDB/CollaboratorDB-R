@@ -6,6 +6,7 @@
 #' @param dir String containing a path to a staging directory.
 #' @param project String containing the name of the project.
 #' @param version String containing the version of the project.
+#' Defaults to the current date.
 #' @param owners Character vector of GitHub user names of project owners.
 #' Defaults to the currently authenticated user from \code{\link{setAccessToken}}.
 #' @param viewers Character vector of GitHub user names of allowed viewers.
@@ -40,7 +41,7 @@
 #' @export
 #' @importFrom zircon uploadProject
 #' @importFrom alabaster.base checkValidDirectory
-uploadDirectory <- function(dir, project, version, owners=NULL, viewers=NULL, public=TRUE, expires=NULL, collapse.md5.duplicates=TRUE) {
+uploadDirectory <- function(dir, project, version=as.character(Sys.Date()), owners=NULL, viewers=NULL, public=TRUE, expires=NULL, collapse.md5.duplicates=TRUE) {
     checkValidDirectory(dir)
 
     fun <- .setup_github_identities()

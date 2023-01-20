@@ -11,6 +11,7 @@ License: MIT + file LICENSE
 Imports:
     CollaboratorDB.schemas,
     alabaster.base,
+    alabaster.matrix,
     zircon,
     filelock,
     utils,
@@ -25,6 +26,7 @@ Suggests:
     rmarkdown,
     testthat,
     BiocStyle,
-    BiocManager
+    BiocManager,
+    alabaster.sce
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr

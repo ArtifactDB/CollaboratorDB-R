@@ -28,7 +28,8 @@ setAnnotation(x, annotation)
 
 \item{description}{String containing the description of the object.}
 
-\item{authors}{Character vector containing the identity of the authors, in terms of their GitHub user names.}
+\item{authors}{List containing the identity of the maintainers.
+Each entry may be a \code{\link{person}}-formatted string, or a list containing the \code{name}, \code{email} and \code{orcid} strings.}
 
 \item{species}{An integer vector of NCBI taxonomy IDs for the species relevant to the data in \code{x}.}
 
@@ -58,13 +59,15 @@ Currently, only Experimental Factor Ontology, Human Disease Ontology, Cell Ontol
 This may be any tag on the corresponding GitHub repository for that ontology, e.g., \url{https://github.com/EBISPOT/efo/releases}.
 }
 Check out \url{https://artifactdb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_terms} for details.}
+
+\item{annotation}{List of CollaboratorDB-relevant metadata to use for annotating \code{x}.}
 }
 \value{
 For \code{annotateObject}, \code{x} is returned with extra fields in its \code{\link{metadata}}.
 
 For \code{objectAnnotation}, a list of CollaboratorDB-relevant metadata is returned.
 
-For \code{setannotation}, \code{x} is returned after replacing the CollaboratorDB-relevant metadata with \code{annotation}.
+For \code{setAnnotation}, \code{x} is returned after replacing the CollaboratorDB-relevant metadata with \code{annotation}.
 }
 \description{
 Add CollaboratorDB's required annotation to a Bioconductor \linkS4class{Annotated} object.
@@ -76,7 +79,7 @@ df <- DataFrame(X=1:10, Y=LETTERS[1:10], Z=factor(letters[1:10]))
 df <- annotateObject(df,
     title="FOO",
     description="I am a data frame",
-    authors="LTLA",
+    authors="Aaron Lun <luna@gene.com>",
     species=9606,
     genome=list(list(id="hg38", source="UCSC")),
     origin=list(list(source="PubMed", id="123456789")),

@@ -43,7 +43,7 @@ This ensures that the version is explicitly pinned in downstream applications an
 }
 \examples{
 \dontshow{fun <- CollaboratorDB:::.configure_cache()}
-id <- "test:my_first_sce/assay-1/matrix.h5@v1"
+id <- "dssc-test_basic-2023:my_first_sce/assay-1/matrix.h5@2023-01-19"
 mat <- CollaboratorDBArray(id)
 mat
 \dontshow{fun()}

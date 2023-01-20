@@ -5,7 +5,8 @@
 #' @param x An \linkS4class{Annotated} object.
 #' @param title String containing the object's title.
 #' @param description String containing the description of the object.
-#' @param authors Character vector containing the identity of the authors, in terms of their GitHub user names.
+#' @param authors  List containing the identity of the maintainers.
+#' Each entry may be a \code{\link{person}}-formatted string, or a list containing the \code{name}, \code{email} and \code{orcid} strings.
 #' @param species An integer vector of NCBI taxonomy IDs for the species relevant to the data in \code{x}. 
 #' @param genome List describing the genomes involved in constructing \code{x}.
 #' Each entry should be a list containing:
@@ -31,13 +32,14 @@
 #' This may be any tag on the corresponding GitHub repository for that ontology, e.g., \url{https://github.com/EBISPOT/efo/releases}.
 #' }
 #' Check out \url{https://artifactdb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_terms} for details.
+#' @param annotation List of CollaboratorDB-relevant metadata to use for annotating \code{x}.
 #' 
 #' @return 
 #' For \code{annotateObject}, \code{x} is returned with extra fields in its \code{\link{metadata}}.
 #'
 #' For \code{objectAnnotation}, a list of CollaboratorDB-relevant metadata is returned.
 #'
-#' For \code{setannotation}, \code{x} is returned after replacing the CollaboratorDB-relevant metadata with \code{annotation}.
+#' For \code{setAnnotation}, \code{x} is returned after replacing the CollaboratorDB-relevant metadata with \code{annotation}.
 #' 
 #' @examples
 #' library(S4Vectors)
@@ -46,7 +48,7 @@
 #' df <- annotateObject(df,
 #'     title="FOO",
 #'     description="I am a data frame",
-#'     authors="LTLA",
+#'     authors="Aaron Lun <luna@gene.com>",
 #'     species=9606,
 #'     genome=list(list(id="hg38", source="UCSC")),
 #'     origin=list(list(source="PubMed", id="123456789")),

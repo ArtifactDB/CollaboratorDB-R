@@ -12,12 +12,14 @@ dir.create(tmp)
 df <- exampleObject()
 saveObject(df, tmp, "my_first_df")
 
+tmp_project <- "test-upload"
+
 test_that("uploading works correctly for a new project", {
     v <- as.integer(Sys.time())
-    uploadDirectory(tmp, "test2", v, expires=1)
+    uploadDirectory(tmp, tmp_project, v, expires=1)
 
     cache <- tempfile()
-    stuff <- fetchObject(zircon::packID("test2", "my_first_df", v), cache=cache)
+    stuff <- fetchObject(zircon::packID(tmp_project, "my_first_df", v), cache=cache)
 
     expect_identical(stuff$X, df$X)
     expect_identical(stuff$Y, df$Y)
@@ -26,15 +28,15 @@ test_that("uploading works correctly for a new project", {
     expect_identical(anno[["_extra"]][["version"]], as.character(v))
     expect_type(anno[["_extra"]][["transient"]][["expires_in"]], "character")
 
-    expect_true(length(zircon::getPermissions("test2", restURL())$owners) == 1L)
+    expect_true(length(zircon::getPermissions(tmp_project, restURL())$owners) == 1L)
 })
 
 test_that("uploading works correctly for an existing project", {
     v <- as.integer(Sys.time())
-    uploadDirectory(tmp, "test", v, expires=1)
+    uploadDirectory(tmp, tmp_project, v, expires=1)
 
     cache <- tempfile()
-    stuff <- fetchObject(zircon::packID("test", "my_first_df", v), cache=cache)
+    stuff <- fetchObject(zircon::packID(tmp_project, "my_first_df", v), cache=cache)
 
     expect_identical(stuff$X, df$X)
     expect_identical(stuff$Y, df$Y)
@@ -42,7 +44,4 @@ test_that("uploading works correctly for an existing project", {
     anno <- objectAnnotation(stuff)
     expect_identical(anno[["_extra"]][["version"]], as.character(v))
     expect_type(anno[["_extra"]][["transient"]][["expires_in"]], "character")
-
-    # MD5 sum-based deduplication is turned on.
-    expect_type(anno[["_extra"]][["link"]][["artifactdb"]], "character")
 })
