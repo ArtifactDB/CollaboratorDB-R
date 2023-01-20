@@ -98,26 +98,62 @@ list.files(staging, recursive=TRUE)
 ```
 
 Once we're done with staging, we're ready to upload.
-We pick a project name and version and call the `uploadDirectory()` function.
+We pick a project name with the following format `<GROUP>-<TAG>-<YEAR>`:
+
+- `GROUP` is the name of your group (e.g., `dssc`, `omnibx`, `oncbx`, `dsi`)
+- `TAG` is some short string describing your project, using only alphanumeric characters and underscores
+- `YEAR` is the current year
+
+Then we call the `uploadDirectory()` function.
 This will prompt us for a [GitHub personal access token](https://github.com/settings/tokens) to authenticate into the backend, if we haven't supplied one already.
 
 🚨🚨🚨 **ALERT!**
 For cost and security reasons, the **CollaboratorDB** instance only allows GitHub users from the [CollaboratorDB](https://github.com/CollaboratorDB) organization to perform new uploads.
 Ask Aaron to add your GitHub account to this organization if you want to perform uploads.
-🚨🚨🚨
+🚨🚨🚨 
 
 ```{r, eval=FALSE}
 # Setting an expiry date of 1 day in the future, to avoid having lots of
 # testing projects lying around in the data store.
-uploadDirectory(staging, project="test-vignette", expires=1)
+uploadDirectory(staging, project="dssc-test_vignette-2023", expires=1)
 ```
 
 By default, the current date is used as the version string, but users can specify another versioning scheme if appropriate.
+
+```{r, eval=FALSE}
+# Alternative version:
+uploadDirectory(staging, project="dssc-test_vignette-2023", version="v1", expires=1)
+```
+
+# Updating a project
+
 The same `uploadDirectory()` call can be used to update an existing project by simply specifying another version:
 
 ```{r, eval=FALSE}
-uploadDirectory(staging, project="test-vignette", version="v2", expires=1)
+uploadDirectory(staging, project="dssc-test_vignette-2023", version="v2", expires=1)
 ```
+
+In practice, our updates are performed long after the original staging directory has been deleted.
+We can use the `cloneDirectory()` function to regenerate the staging directory for a previous version;
+the contents of this directory can then be modified as desired prior to the `uploadDirectory()` call.
+Customizations should be limited to removal of existing resources and addition of new resources.
+(Renaming will not work as paths are hard-coded into the JSON files.)
+
+```{r}
+new.staging <- tempfile()
+cloneDirectory(new.staging, project="dssc-test_basic-2023", version="2023-01-19")
+
+# Applying some customizations.
+unlink(file.path(new.staging, "variants"))
+saveObject(df2, new.staging, "superfoobar")
+
+# And then we can upload.
+# uploadDirectory(new.staging, project="dssc-test_basic-2023", version="20XX-XX-XX")
+```
+
+That said, there are no restrictions on what constitutes a new version of a project.
+There is no obligation for a new version's resources to overlap with those of a previous version (though the backend can more efficiently organize data if there is some overlap).
+If warranted, users can completely change the objects within the project by creating an entirely new staging directory and uploading that as a new version.
 
 # `DelayedArray` wrappers for CollaboratorDB
 
