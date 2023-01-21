@@ -26,7 +26,7 @@ knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
 and is intended to enable a smooth exchange of data and results between gRED scientists and their external collaborators.
 Functionality is provided to read objects from the backend, to save objects in new projects, and to save new versions of existing projects.
 
-# Fetching objects from the backend
+# Fetching an object 
 
 The `fetchObject()` function will load an R object from the **CollaboratorDB** backend, given the object's identifier:
 
@@ -49,6 +49,27 @@ For example, we can load [`SingleCellExperiment`](https://bioconductor.org/packa
 ```{r}
 fetchObject("dssc-test_basic-2023:my_first_sce@2023-01-19")
 ```
+
+# Fetching multiple objects
+
+We can grab all objects from a particular version of a project with the `fetchAllObjects()` function.
+This loops through all the non-child resources in the project and pulls them into the R session.
+
+```{r}
+objects <- fetchAllObjects("dssc-test_basic-2023", version="2023-01-19")
+names(objects) # object paths
+objects[[1]]
+```
+
+We can also do this for all versions of the project, if we don't know which one is interesting ahead of time.
+
+```{r}
+versions <- fetchAllObjects("dssc-test_basic-2023")
+names(versions) # version names
+names(versions[[1]]) # object paths
+```
+
+However, these functions are relatively inefficient, so it is better to use `fetchObject()` in your scripts once the resource of interest is identified.
 
 # Saving objects 
 
@@ -155,7 +176,7 @@ That said, there are no restrictions on what constitutes a new version of a proj
 There is no obligation for a new version's resources to overlap with those of a previous version (though the backend can more efficiently organize data if there is some overlap).
 If warranted, users can completely change the objects within the project by creating an entirely new staging directory and uploading that as a new version.
 
-# `DelayedArray` wrappers for CollaboratorDB
+# `DelayedArray` wrappers 
 
 For arrays, `r self` offers some special behavior during loading:
 
