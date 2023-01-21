@@ -26,6 +26,24 @@ knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
 and is intended to enable a smooth exchange of data and results between gRED scientists and their external collaborators.
 Functionality is provided to read objects from the backend, to save objects in new projects, and to save new versions of existing projects.
 
+Installation currently requires manual handling of a number of dependencies from GitHub;
+this should hopefully be simplified once those same packages are accepted into Bioconductor.
+
+```r
+BiocManager::install("ArtifactDB/alabaster.base")
+BiocManager::install("ArtifactDB/alabaster.matrix")
+BiocManager::install("ArtifactDB/alabaster.ranges")
+BiocManager::install("ArtifactDB/alabaster.se")
+BiocManager::install("ArtifactDB/alabaster.sce")
+BiocManager::install("ArtifactDB/alabaster.spatial")
+BiocManager::install("ArtifactDB/alabaster.string")
+BiocManager::install("ArtifactDB/alabaster.vcf")
+BiocManager::install("ArtifactDB/alabaster.bumpy")
+BiocManager::install("ArtifactDB/alabaster.mae")
+BiocManager::install("ArtifactDB/zircon-R")
+BiocManager::install("CollaboratorDB/CollaboratorDB-R")
+```
+
 # Fetching an object 
 
 The `fetchObject()` function will load an R object from the **CollaboratorDB** backend, given the object's identifier:

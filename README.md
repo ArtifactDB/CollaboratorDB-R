@@ -4,4 +4,4 @@ This repository contains the **CollaboratorDB** R package, which implements an R
 It is effectively a wrapper around the [**alabaster**](https://github.com/ArtifactDB/alabaster.base) framework for saving/loading Bioconductor objects,
 combined with functions from the [**zircon**](https://github.com/ArtifactDB/zircon-R) R client to pull/save data from the **calcite** API.
 
-See the [user's guide](https://collaboratordb.github.io/CollaboratorDB-R/articles/userguide.html) for more details. 
+See the [user's guide](vignettes/userguide.Rmd) for more details. 
