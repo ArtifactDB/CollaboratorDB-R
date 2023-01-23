@@ -15,14 +15,14 @@ vignette: >
 
 ```{r, echo=FALSE}
 library(BiocStyle)
-self <- Githubpkg("ArtifactDB/CollaboratorDB-R", "CollaboratorDB");
+self <- Githubpkg("CollaboratorDB/CollaboratorDB-R", "CollaboratorDB");
 knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
 ```
 
 # Introduction
 
 `r self` implements a simple R client for interacting with the **CollaboratorDB** API.
-**CollaboratorDB** provides a publicly accessible store for Bioconductor objects based on the [schemas here](https://github.com/ArtifactDB/CollaboratorDB-schemas),
+**CollaboratorDB** provides a publicly accessible store for Bioconductor objects based on the [schemas here](https://github.com/CollaboratorDB/CollaboratorDB-schemas),
 and is intended to enable a smooth exchange of data and results between gRED scientists and their external collaborators.
 Functionality is provided to read objects from the backend, to save objects in new projects, and to save new versions of existing projects.
 
@@ -79,7 +79,17 @@ names(objects) # object paths
 objects[[1]]
 ```
 
-We can also do this for all versions of the project, if we don't know which one is interesting ahead of time.
+Some objects may be stored multiple times under different names if they have an alias.
+
+```{r}
+identical(objects[["my_first_df"]], objects[["my_first_df/simple.csv.gz"]])
+```
+
+```{r, echo=FALSE}
+stopifnot(identical(objects[["my_first_df"]], objects[["my_first_df/simple.csv.gz"]]))
+```
+
+We can also fetch all objects for all versions of the project, if we don't know the right version ahead of time.
 
 ```{r}
 versions <- fetchAllObjects("dssc-test_basic-2023")
@@ -87,7 +97,7 @@ names(versions) # version names
 names(versions[[1]]) # object paths
 ```
 
-However, these functions are relatively inefficient, so it is better to use `fetchObject()` in your scripts once the resource of interest is identified.
+However, these functions are relatively inefficient, so it is better to use `fetchObject()` explicitly in your scripts once the resource of interest is identified.
 
 # Saving objects 
 
