@@ -20,7 +20,8 @@ Imports:
     tools,
     stats,
     S4Vectors,
-    DelayedArray
+    DelayedArray,
+    httr
 Suggests:
     knitr,
     rmarkdown,

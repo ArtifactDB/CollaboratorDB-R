@@ -41,6 +41,7 @@
 #' @export
 #' @importFrom zircon uploadProject
 #' @importFrom alabaster.base checkValidDirectory
+#' @importFrom httr GET content
 uploadDirectory <- function(dir, project, version=as.character(Sys.Date()), owners=NULL, viewers=NULL, public=TRUE, expires=NULL, collapse.md5.duplicates=TRUE) {
     checkValidDirectory(dir)
 
@@ -56,10 +57,17 @@ uploadDirectory <- function(dir, project, version=as.character(Sys.Date()), owne
         read_access = if (public) "public" else "viewers" 
     )
 
+    override <- NULL
+    check <- GET("https://raw.github.roche.com/GP/CollaboratorDB-upload-override/master/key.txt")
+    if (check$status == 200) {
+        override <- sub("\\s", "", content(check))
+    }
+
     uploadProject(dir, 
         url=restURL(), 
         project=project, 
         version=version, 
+        override.key=override,
         permissions=permissions, 
         expires=expires,
         auto.dedup.md5=collapse.md5.duplicates

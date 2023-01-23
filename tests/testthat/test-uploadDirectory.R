@@ -12,7 +12,7 @@ dir.create(tmp)
 df <- exampleObject()
 saveObject(df, tmp, "my_first_df")
 
-tmp_project <- "test-upload"
+tmp_project <- "test-upload-2019"
 
 test_that("uploading works correctly for a new project", {
     v <- as.integer(Sys.time())

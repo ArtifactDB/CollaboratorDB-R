@@ -147,8 +147,7 @@ Then we call the `uploadDirectory()` function.
 This will prompt us for a [GitHub personal access token](https://github.com/settings/tokens) to authenticate into the backend, if we haven't supplied one already.
 
 🚨🚨🚨 **ALERT!**
-For cost and security reasons, the **CollaboratorDB** instance only allows GitHub users from the [CollaboratorDB](https://github.com/CollaboratorDB) organization to perform new uploads.
-Ask Aaron to add your GitHub account to this organization if you want to perform uploads.
+To upload new projects, you must be either connected to the Roche corporate network, or be part of the [CollaboratorDB](https://github.com/CollaboratorDB) GitHub organization.
 🚨🚨🚨 
 
 ```{r, eval=FALSE}
