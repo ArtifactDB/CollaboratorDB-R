@@ -4,7 +4,7 @@
 \alias{fetchAllObjects}
 \title{Fetch all objects for a project}
 \usage{
-fetchAllObjects(project, version = NULL, ...)
+fetchAllObjects(project, version = NULL, ..., ignore.redirection.target = TRUE)
 }
 \arguments{
 \item{project}{String containing the name of the project.}
@@ -12,6 +12,8 @@ fetchAllObjects(project, version = NULL, ...)
 \item{version}{String containing the name of the version.}
 
 \item{...}{Further arguments to pass to \code{\link{fetchObject}}.}
+
+\item{ignore.redirection.target}{Logical scalar indicating whether redirection targets should be ignored in the returned listing.}
 }
 \value{
 If \code{version} is specified, a named list is returned containing all (non-child) R objects generated loading each resource in that version of the project.
@@ -21,14 +23,15 @@ If \code{version=NULL}, a named list is returned containing one inner list per v
 Each inner list is named after its version and contains all (non-child) R objects for that version.
 }
 \description{
-Fetch and load all objects for a project or one of its versions.
+Fetch and load all (non-child) objects for a project or one of its versions.
 }
 \details{
 Only non-child objects are returned in each list.
 Children are used to assemble their parent objects and are not reported here.
 
-For redirections, a copy of the destination object is reported under the redirection's path.
-This means that some resources may be reported multiple times - once for each redirection, and one for its \dQuote{true} path.
+By default, redirection targets are ignored when reporting objects.
+For example, if there is a redirection from path A to path B, the redirected path A is reported in the listing, and the redirection target B is ignored.
+Setting \code{ignore.redirection.target=FALSE} will cause both A and B to be reported, so the same object will be present under different paths.
 }
 \examples{
 # Specific version:

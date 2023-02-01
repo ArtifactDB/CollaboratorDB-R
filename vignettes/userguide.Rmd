@@ -104,18 +104,7 @@ This loops through all the non-child resources in the project and pulls them int
 
 ```{r}
 objects <- fetchAllObjects("dssc-test_basic-2023", version="2023-01-19")
-names(objects) # object paths
-objects[[1]]
-```
-
-Some objects may be stored multiple times under different names if they have an alias.
-
-```{r}
-identical(objects[["my_first_df"]], objects[["my_first_df/simple.csv.gz"]])
-```
-
-```{r, echo=FALSE}
-stopifnot(identical(objects[["my_first_df"]], objects[["my_first_df/simple.csv.gz"]]))
+objects
 ```
 
 We can also fetch all objects for all versions of the project, if we don't know the right version ahead of time.
@@ -126,7 +115,8 @@ names(versions) # version names
 names(versions[[1]]) # object paths
 ```
 
-However, these functions are relatively inefficient, so it is better to use `fetchObject()` explicitly in your scripts once the resource of interest is identified.
+However, these functions are relatively inefficient as they need to load all resources from file.
+Prefer using `fetchObject()` explicitly in your scripts once the resource of interest is identified.
 
 # Saving objects 
 
