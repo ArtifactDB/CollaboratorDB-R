@@ -147,7 +147,10 @@ df1 <- annotateObject(df1,
 )
 ```
 
-Then we save the object into a "staging directory":
+Then we save the object into a "staging directory" using `saveObject()`.
+It's worth noting that only the object passed to `saveObject()` needs to be annotated with `annotateObject()`.
+Child objects (e.g., nested `DataFrame`s in a `SummarizedExperiment`) are assumed to be described by the metadata of their parents,
+though diligent uploaders are free to annotate the children if further detail needs to be added.
 
 ```{r}
 staging <- tempfile()

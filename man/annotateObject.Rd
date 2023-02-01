@@ -72,6 +72,18 @@ For \code{setAnnotation}, \code{x} is returned after replacing the CollaboratorD
 \description{
 Add CollaboratorDB's required annotation to a Bioconductor \linkS4class{Annotated} object.
 }
+\details{
+Only \dQuote{parent} objects need to be annotated with \code{annotateObject}.
+An object is considered to be a parent if it is directly passed to \code{\link{saveObject}},
+as opposed to child objects that are nested within the parents.
+Children are assumed to be described by the metadata of their parents,
+just like how we declare dependents on tax or visa forms,
+so further annotation is considered to be strictly unnecessary.
+
+Nonetheless, users may still add separate annotation to child objects via \code{annotateObject}, and this will be respected and saved.
+This is useful if the child object requires an extra description, e.g., because it was taken from a different source or uses a different genome.
+Kind of like how child actors earn enough to file their own tax returns.
+}
 \examples{
 library(S4Vectors)
 df <- DataFrame(X=1:10, Y=LETTERS[1:10], Z=factor(letters[1:10]))
