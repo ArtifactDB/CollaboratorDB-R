@@ -44,12 +44,41 @@ BiocManager::install("ArtifactDB/zircon-R")
 BiocManager::install("CollaboratorDB/CollaboratorDB-R")
 ```
 
+# Listing versions and objects
+
+Given a project name, we can list the available objects across all of its versions:
+
+```{r}
+library(CollaboratorDB)
+listing <- listObjects("dssc-test_basic-2023")
+names(listing) # all available versions
+listing
+```
+
+The `id` field contains the identifier for each (non-child) object in this project.
+
+```{r}
+listing[[1]]$id
+```
+
+Other fields may contain useful metadata that was added by the author of the object.
+
+```{r}
+listing[[1]]$description
+as.list(listing[[1]]$origin)
+```
+
+If we know the specific version of interest, we can just list objects from that version:
+
+```{r}
+listObjects("dssc-test_basic-2023", version="2023-01-19")
+```
+
 # Fetching an object 
 
 The `fetchObject()` function will load an R object from the **CollaboratorDB** backend, given the object's identifier:
 
 ```{r}
-library(CollaboratorDB)
 (id <- exampleID())
 obj <- fetchObject(id)
 obj
