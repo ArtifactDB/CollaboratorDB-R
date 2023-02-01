@@ -39,7 +39,7 @@ Each entry should be a list containing:
 \item \code{id}, a string containing the genome build ID (e.g., hg38, NCBIm37)
 \item \code{type}, a string specifying the type of ID (e.g., UCSC, Ensembl)
 }
-Check out \url{https://artifactdb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_genome} for details.}
+Check out \url{https://collaboratordb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_genome} for details.}
 
 \item{origin}{List describing the origin of \code{x}.
 Each entry should be a list containing:
@@ -47,7 +47,7 @@ Each entry should be a list containing:
 \item \code{source}, a string describing the source repository, e.g., PubMed, GEO, ArrayExpress.
 \item \code{id}, a string containing an identifier within \code{source}.
 }
-Check out \url{https://artifactdb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_origin} for details.}
+Check out \url{https://collaboratordb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_origin} for details.}
 
 \item{terms}{List of ontology terms relevant to this resource.
 Each entry should be a list containing:
@@ -58,7 +58,7 @@ Currently, only Experimental Factor Ontology, Human Disease Ontology, Cell Ontol
 \item \code{version}, a string containing the version of the ontology.
 This may be any tag on the corresponding GitHub repository for that ontology, e.g., \url{https://github.com/EBISPOT/efo/releases}.
 }
-Check out \url{https://artifactdb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_terms} for details.}
+Check out \url{https://collaboratordb.github.io/CollaboratorDB-schemas/array/v1.html#allOf_i0_terms} for details.}
 
 \item{annotation}{List of CollaboratorDB-relevant metadata to use for annotating \code{x}.}
 }
