@@ -45,3 +45,25 @@ test_that("saveObject fails on attempts to save inside subdirectories", {
 
     expect_error(saveObject(df, tmp, "foo1/boo"), "cannot save")
 })
+
+test_that("saveObject emits verbose messages properly", {
+    df <- exampleObject()
+
+    tmp <- tempfile()
+    dir.create(tmp)
+    expect_message(saveObject(df, tmp, "foo", verbose=TRUE), "staging <DFrame>")
+
+    # Checking that the object is still okay.
+    meta <- alabaster.base::acquireMetadata(tmp, "foo")
+    roundtrip <- CollaboratorDB:::cdbLoadObject(meta, tmp)
+
+    expect_identical(objectAnnotation(roundtrip)$authors[[1]]$name, "Aaron Lun")
+    expect_match(objectAnnotation(roundtrip)$authors[[1]]$email, ".com")
+
+    # Fixing the metadata before comparison.
+    metadata(df)$.internal$CollaboratorDB$authors <- objectAnnotation(roundtrip)$authors
+    metadata(df)$.internal$CollaboratorDB$species <- as.list(metadata(df)$.internal$CollaboratorDB$species)
+    expect_equal(df, roundtrip)
+})
+
+

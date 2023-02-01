@@ -8,6 +8,7 @@
 #' @param dir String containing a path to a staging directory.
 #' @param path String containing the relative path inside the staging directory in which to save the object's contents.
 #' This should not be nested inside any subdirectories created by previous \code{saveObject} calls.
+#' @param verbose Logical scalar indicating whether to emit progress messages.
 #'
 #' @return 
 #' \code{x} is saved to the specified location, and \code{NULL} is invisibly returned.
@@ -35,9 +36,15 @@
 #' @export
 #' @importFrom alabaster.base .altStageObject .writeMetadata .createRedirection
 #' @importFrom zircon uploadProject
-saveObject <- function(x, dir, path) {
+saveObject <- function(x, dir, path, verbose=FALSE) {
     olds <- .altStageObject(cdbStageObject)
     on.exit(.altStageObject(olds), add=TRUE)
+
+    if (verbose) {
+        stage.globals$verbose <- 0L
+        on.exit({ stage.globals$verbose <- NULL }, add=TRUE)
+    }
+
     meta <- cdbStageObject(x, dir, path, child=FALSE)
 
     extras <- objectAnnotation(x)
@@ -60,8 +67,26 @@ saveObject <- function(x, dir, path) {
     invisible(NULL)
 }
 
+stage.globals <- new.env()
+stage.globals$verbose <- NULL
+stage.buttons <- c("-", "+", "*", "~", ">")
+
 #' @import methods
-setGeneric("cdbStageObject", function(x, dir, path, child=FALSE, ...) standardGeneric("cdbStageObject"))
+setGeneric("cdbStageObject", function(x, dir, path, child=FALSE, ...) {
+    verbose <- !is.null(stage.globals$verbose)
+    if (verbose) {
+        indent <- ""
+        if (stage.globals$verbose) {
+            button <- stage.buttons[(length(stage.buttons) %% (stage.globals$verbose/2L)) + 1L]
+            indent <- paste0(strrep(" ", stage.globals$verbose - 1), button)
+        }
+        message(paste0("[", format(Sys.time(), digits=0), "]", indent, " staging <", class(x)[1], "> at '", path, "' ..."))
+        stage.globals$verbose <- stage.globals$verbose + 2L
+        on.exit({ stage.globals$verbose <- stage.globals$verbose - 2L });
+    }
+
+    standardGeneric("cdbStageObject")
+})
 
 #' @import CollaboratorDB.schemas
 #' @importFrom alabaster.base stageObject 

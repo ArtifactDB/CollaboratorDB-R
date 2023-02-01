@@ -4,7 +4,7 @@
 \alias{saveObject}
 \title{Save an object to file}
 \usage{
-saveObject(x, dir, path)
+saveObject(x, dir, path, verbose = FALSE)
 }
 \arguments{
 \item{x}{A supported Bioconductor object, with annotation added by \code{\link{annotateObject}}.}
@@ -13,6 +13,8 @@ saveObject(x, dir, path)
 
 \item{path}{String containing the relative path inside the staging directory in which to save the object's contents.
 This should not be nested inside any subdirectories created by previous \code{saveObject} calls.}
+
+\item{verbose}{Logical scalar indicating whether to emit progress messages.}
 }
 \value{
 \code{x} is saved to the specified location, and \code{NULL} is invisibly returned.
