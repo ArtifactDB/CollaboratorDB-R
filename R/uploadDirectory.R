@@ -14,6 +14,7 @@
 #' @param expires Integer scalar specifying the expiry date for this version of the project.
 #' If \code{NULL}, the uploaded version will not expire.
 #' @param collapse.md5.duplicates Logical scalar indicating whether duplicated files with the same MD5 checksum should be collapsed.
+#' @param verbose Logical scalar indicating whether to report progress on each upload.
 #'
 #' @return \code{NULL} is invisibly returned on success.
 #'
@@ -42,7 +43,7 @@
 #' @importFrom zircon uploadProject
 #' @importFrom alabaster.base checkValidDirectory
 #' @importFrom httr GET content
-uploadDirectory <- function(dir, project, version=as.character(Sys.Date()), owners=NULL, viewers=NULL, public=TRUE, expires=NULL, collapse.md5.duplicates=TRUE) {
+uploadDirectory <- function(dir, project, version=as.character(Sys.Date()), owners=NULL, viewers=NULL, public=TRUE, expires=NULL, collapse.md5.duplicates=TRUE, verbose=FALSE) {
     checkValidDirectory(dir)
 
     fun <- .setup_github_identities()
@@ -70,6 +71,7 @@ uploadDirectory <- function(dir, project, version=as.character(Sys.Date()), owne
         override.key=override,
         permissions=permissions, 
         expires=expires,
-        auto.dedup.md5=collapse.md5.duplicates
+        auto.dedup.md5=collapse.md5.duplicates,
+        upload.args=list(verbose=verbose)
     )
 }

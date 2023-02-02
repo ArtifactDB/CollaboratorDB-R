@@ -12,7 +12,8 @@ uploadDirectory(
   viewers = NULL,
   public = TRUE,
   expires = NULL,
-  collapse.md5.duplicates = TRUE
+  collapse.md5.duplicates = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ Defaults to the currently authenticated user from \code{\link{setAccessToken}}.}
 If \code{NULL}, the uploaded version will not expire.}
 
 \item{collapse.md5.duplicates}{Logical scalar indicating whether duplicated files with the same MD5 checksum should be collapsed.}
+
+\item{verbose}{Logical scalar indicating whether to report progress on each upload.}
 }
 \value{
 \code{NULL} is invisibly returned on success.
