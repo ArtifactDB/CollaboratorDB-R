@@ -71,7 +71,7 @@ CollaboratorDBArraySeed <- function(id) {
 
     proj <- new("CollaboratorDBHandler", project=unpacked$project, version=unpacked$version)
     info <- acquireMetadata(proj, unpacked$path)
-    seed <- .createRawArraySeed(info, acquireFile(proj, unpacked$path))
+    seed <- .createRawArraySeed(info, proj)
 
     new("CollaboratorDBArraySeed", id=id, seed=seed)
 }
