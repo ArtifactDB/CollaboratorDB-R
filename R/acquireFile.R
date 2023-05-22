@@ -12,7 +12,7 @@ setMethod("acquireFile", "CollaboratorDBHandler", function(project, path) {
 #' @importFrom alabaster.base acquireMetadata
 setMethod("acquireMetadata", "CollaboratorDBHandler", function(project, path) {
     id <- packID(project@project, path, project@version)
-    getFileMetadata(id, url=restURL(), cache=.create_cache_function(), follow.links=TRUE)
+    getFileMetadata(id, url=restURL(), cache=.create_cache_function(), follow.link=TRUE)
 })
 
 # Force filelock to be imported here; it's only Suggested by zircon for
