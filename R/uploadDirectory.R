@@ -72,6 +72,7 @@ uploadDirectory <- function(dir, project, version=as.character(Sys.Date()), owne
         permissions=permissions, 
         expires=expires,
         auto.dedup.md5=collapse.md5.duplicates,
+        api.version=1,
         upload.args=list(verbose=verbose)
     )
 }

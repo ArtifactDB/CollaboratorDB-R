@@ -31,7 +31,7 @@ github.env <- new.env()
 setAccessToken <- function(token, cache=TRUE) {
     setGitHubToken(token, 
         cache.env=github.env, 
-        cache.path=if (cache) .token_cache_path() else NULL
+        github.cache.path=if (cache) .token_cache_path() else NULL
     )
 }
 
@@ -41,20 +41,22 @@ setAccessToken <- function(token, cache=TRUE) {
 accessTokenInfo <- function(prompt=interactive()) {
     getGitHubTokenInfo(
         cache.env=github.env,
-        cache.path=.token_cache_path(),
+        github.cache.path=.token_cache_path(),
         prompt=prompt
     )
 }
 
 .token_cache_path <- function() {
     dir <- .cache_directory()
-    file.path(dir, "token.txt")
+    file.path(dir, "github.txt")
 }
 
 #' @importFrom zircon useGitHubIdentities
 .setup_github_identities <- function(cache=TRUE) {
     useGitHubIdentities(
         cache.env=github.env, 
-        cache.path=if (cache) .token_cache_path() else NULL
+        org.id="CollaboratorDB",
+        github.cache.path=if (cache) .token_cache_path() else NULL,
+        jwt.cache.path=if (cache) file.path(.cache_directory(), "temp.json") else NULL
     )
 }
