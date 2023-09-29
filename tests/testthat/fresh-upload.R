@@ -24,7 +24,7 @@ sce <- annotateObject(sce,
 saveObject(sce, tmp, "my_first_sce")
 
 # Uploading it to the backend (requires authentication):
-uploadDirectory(tmp, "dssc-test_basic-2023", "2023-01-19")
+uploadDirectory(tmp, "dssc-test_basic-2023", "2023-07-28")
 
 #################################################
 ## Other uploads, for demonstration purposes. ###
@@ -45,7 +45,7 @@ airway <- annotateObject(airway,
     origin=list(list(source="PubMed", id="24926665"), list(source="GEO", id="GSE52778"))
 )
 saveObject(airway, tmp, "airway")
-uploadDirectory(tmp, "dssc-test_airway-2023", "2023-01-19")
+uploadDirectory(tmp, "dssc-test_airway-2023", "2023-07-28")
 
 # Now for some 10X demos:
 library(BiocFileCache)
@@ -91,4 +91,4 @@ for (opt in c("pbmc3k", "pbmc4k", "pbmc8k")) {
     saveObject(sce, tmp, paste0("rnaseq/", opt))
 }
 
-uploadDirectory(tmp, "dssc-test_tenx-2023", "2023-01-19")
+uploadDirectory(tmp, "dssc-test_tenx-2023", "2023-07-28")

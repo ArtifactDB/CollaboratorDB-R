@@ -36,5 +36,5 @@ exampleObject <- function() {
 #' @export
 #' @rdname examples
 exampleID <- function() {
-    "dssc-test_basic-2023:my_first_df@2023-01-19"
+    "dssc-test_basic-2023:my_first_df@2023-07-28"
 }
